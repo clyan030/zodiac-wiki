@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>你的星座其實可能不是你的星座</title>
+<meta name="description" content="給沒學過天文的人的教學簡報：天文星座和黃道宮的差別、歲差，以及為什麼出生那天太陽所在的星座可能不是同名的那個宮。">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#0b1020; --panel:#141d38; --line:#2b3a63;
+  --text:#ebf0fa; --muted:#a8b5d1; --accent:#c8b9ff;
+  --gong:#f3b44a; --gong2:#d38f22; --gong-bg:rgba(243,180,74,.13);
+  --zuo:#6cc6ff; --zuo2:#3e98d8; --zuo-bg:rgba(108,198,255,.13);
+  --ok:#66d69a; --bad:#ff8d8d; --ink:#0b1020;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;-webkit-text-size-adjust:100%;overflow:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.55;background-image:
+ radial-gradient(1.2px 1.2px at 8% 14%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 23% 72%,#fff 50%,transparent 51%),
+ radial-gradient(1.4px 1.4px at 37% 28%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 52% 86%,#fff 50%,transparent 51%),
+ radial-gradient(1.2px 1.2px at 66% 9%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 78% 58%,#fff 50%,transparent 51%),
+ radial-gradient(1.5px 1.5px at 91% 31%,#fff 50%,transparent 51%),radial-gradient(1px 1px at 14% 44%,#fff 50%,transparent 51%),
+ radial-gradient(1px 1px at 46% 52%,#fff 50%,transparent 51%),radial-gradient(1.2px 1.2px at 85% 88%,#fff 50%,transparent 51%)}
+.progress{position:fixed;top:0;left:0;height:4px;width:0;background:linear-gradient(90deg,var(--zuo),var(--gong));z-index:5;transition:width .3s}
+nav.ctrl{position:fixed;right:16px;bottom:12px;display:flex;gap:8px;align-items:center;z-index:5}
+nav.ctrl button{font:inherit;font-size:18px;min-width:44px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer}
+nav.ctrl button:hover{border-color:var(--accent)}
+nav.ctrl button:focus-visible,.opts button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#counter{color:var(--muted);font-size:14px;min-width:58px;text-align:center}
+.slide{position:fixed;inset:0;display:none;flex-direction:column;overflow-y:auto;padding:clamp(20px,4.5vh,52px) clamp(16px,5vw,64px) 70px}
+.slide.active{display:flex;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.slide.active{animation:none}.progress{transition:none}}
+.inner{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;max-width:1120px;width:100%;margin:0 auto}
+.kicker{color:var(--accent);letter-spacing:.06em;font-size:clamp(13px,1.3vw,16px);font-weight:600;margin:0 0 .4em}
+h1{font-size:clamp(34px,6vw,76px);line-height:1.15;margin:.15em 0 .4em}
+h2{font-size:clamp(24px,3.3vw,42px);line-height:1.25;margin:0 0 .55em}
+h3{font-size:clamp(18px,2.1vw,27px);margin:0 0 .4em}
+p,li{font-size:clamp(16px,1.8vw,23px);line-height:1.65}
+p{margin:.35em 0}
+ul,ol{padding-left:1.3em;margin:.3em 0}
+li{margin:.22em 0}
+.src{max-width:1120px;width:100%;margin:20px auto 0;padding:8px 210px 0 0;border-top:1px solid var(--line);color:var(--muted);font-size:clamp(12px,1.1vw,14px);line-height:1.6}
+.src b{color:var(--text);font-weight:600}
+.gong{color:var(--gong);font-weight:700}
+.zuo{color:var(--zuo);font-weight:700}
+.en{color:var(--muted);font-weight:400;font-size:.82em}
+.lead{font-size:clamp(18px,2.3vw,28px);color:var(--text)}
+.hint{color:var(--muted);font-size:clamp(14px,1.4vw,17px);margin-top:1.4em}
+.note{color:var(--muted);font-size:clamp(14px,1.35vw,17px);line-height:1.6}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:clamp(14px,2vw,22px)}
+.card p,.card li{font-size:clamp(15px,1.65vw,21px)}
+.card.g{border-color:rgba(243,180,74,.55);background:linear-gradient(180deg,var(--gong-bg),transparent 75%),var(--panel)}
+.card.z{border-color:rgba(108,198,255,.55);background:linear-gradient(180deg,var(--zuo-bg),transparent 75%),var(--panel)}
+.big{font-size:clamp(26px,3.6vw,46px);font-weight:700;margin:.1em 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2vw,24px)}
+.fig{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(16px,3vw,40px);align-items:center}
+.fig svg{width:100%;height:auto;max-height:54vh}
+.quote{font-size:clamp(22px,3.1vw,40px);line-height:1.45;border-left:5px solid var(--gong);padding:.15em .8em;margin:.3em 0 .5em}
+.ask{font-size:clamp(20px,2.6vw,33px);line-height:1.5}
+.answer{font-size:clamp(19px,2.3vw,29px);border:1px solid var(--accent);border-radius:12px;padding:.3em .8em;margin-top:.3em;background:rgba(200,185,255,.08)}
+table.names{border-collapse:collapse;width:100%;font-size:clamp(14px,1.55vw,20px)}
+table.names th,table.names td{padding:.32em .6em;border-bottom:1px solid var(--line);text-align:left}
+table.names th{color:var(--muted);font-weight:600}
+table.names tr.diff td{background:rgba(255,255,255,.04)}
+.hscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.hscroll svg{min-width:760px;width:100%;height:auto;display:block}
+.legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:clamp(13px,1.3vw,16px);margin:.2em 0 .5em}
+.sw{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+.sw.g{background:var(--gong)}.sw.z{background:var(--zuo)}
+svg .t{fill:var(--text)} svg .m{fill:var(--muted)} svg .ink{fill:var(--ink)}
+svg .tg{fill:var(--gong)} svg .tz{fill:var(--zuo)}
+svg .g1{fill:var(--gong)} svg .g2{fill:var(--gong2)} svg .z1{fill:var(--zuo)} svg .z2{fill:var(--zuo2)}
+svg .zoph{fill:#9fdcff;stroke:#fff;stroke-width:1.5}
+svg .ln{stroke:var(--line)} svg .lm{stroke:var(--muted)} svg .lt{stroke:var(--text)} svg .la{stroke:var(--accent)}
+svg .lg{stroke:var(--gong)} svg .lz{stroke:var(--zuo)}
+/* quiz */
+.qs{display:grid;gap:clamp(12px,1.8vw,20px)}
+.q p.qt{margin:0 0 .45em;font-weight:600}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opts button{font:inherit;font-size:clamp(15px,1.6vw,20px);padding:.45em .9em;border-radius:10px;border:1px solid var(--line);background:#1b2547;color:var(--text);cursor:pointer;text-align:left}
+.opts button:hover{border-color:var(--accent)}
+.opts button.right{border-color:var(--ok);background:rgba(102,214,154,.16)}
+.opts button.wrong{border-color:var(--bad);background:rgba(255,141,141,.14)}
+.fb{margin-top:.5em;font-size:clamp(14px,1.45vw,18px);line-height:1.6;color:var(--muted)}
+.fb .verdict{color:var(--ok);font-weight:700;margin-right:.4em}
+.fb.isbad .verdict{color:var(--bad)}
+/* lookup */
+.lookup .pick{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:clamp(17px,1.9vw,24px);margin-bottom:.8em}
+.lookup select{font:inherit;font-size:clamp(17px,1.9vw,24px);padding:.2em .5em;border-radius:8px;border:1px solid var(--line);background:#1b2547;color:var(--text)}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.6vw,18px)}
+.res .card .lab{color:var(--muted);font-size:clamp(14px,1.4vw,17px);margin:0}
+.res .card .val{font-size:clamp(24px,3vw,38px);font-weight:700;margin:.15em 0}
+.res .card .why{color:var(--muted);font-size:clamp(12px,1.2vw,15px);margin:0}
+.cmp{margin-top:.8em}
+table.srcs{border-collapse:collapse;width:100%;font-size:clamp(13px,1.4vw,18px)}
+table.srcs th,table.srcs td{padding:.3em .55em;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.srcs th{color:var(--muted);font-weight:600;white-space:nowrap}
+table.srcs td:first-child{white-space:nowrap}
+[lang="en"]{font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.names-wrap{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,2.4vw,32px);align-items:start}
+.names-wrap table.names{font-size:clamp(14px,1.45vw,19px)}
+@media (min-width:901px){.names-wrap table.names th,.names-wrap table.names td{white-space:nowrap}}
+@media (max-width:900px){.names-wrap{grid-template-columns:1fr}}
+@media (max-width:760px){
+  .grid2,.fig,.res{grid-template-columns:1fr}
+  .src{padding-right:0}
+  nav.ctrl{left:0;right:0;bottom:0;justify-content:center;padding:8px;background:rgba(11,16,32,.94);border-top:1px solid var(--line)}
+  .slide{padding-bottom:76px}
+  .fig svg{max-height:40vh}
+}
+@media print{
+  :root{--bg:#fff;--panel:#f5f6fa;--line:#c9cfdc;--text:#111;--muted:#444;--gong:#a86200;--gong2:#c98a2a;--zuo:#0a64a6;--zuo2:#4c9bd6;--ink:#fff;--accent:#5a3fb0}
+  body{overflow:visible} body::before,nav.ctrl,.progress{display:none}
+  .slide{position:static;display:flex!important;min-height:auto;overflow:visible;page-break-after:always;padding:24px}
+  .fb[hidden]{display:block!important}
+}
+</style>
+</head>
+<body>
+<div class="progress" aria-hidden="true"></div>
+<main>
+
+<!-- 1 -->
+<section class="slide" data-source="黃道宮,歲差" aria-label="第 1 張：封面">
+<div class="inner">
+  <p class="kicker">歲差與黃道宮</p>
+  <h1>你的星座<br>其實可能不是你的星座</h1>
+  <p class="lead">給沒學過天文的人：<span class="gong">○○宮</span>和<span class="zuo">○○座</span>差在哪裡？為什麼會差將近一個月？</p>
+  <p class="hint">按鍵盤 → 或點右下角的按鈕換頁（手機可左右滑）。共 23 張，最後有小測驗。</p>
+</div>
+<footer class="src"><b>出處（wiki）</b>：黃道宮、歲差</footer>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-source="taipei-edu-13-constellations,日期對照表" aria-label="第 2 張：引起動機">
+<div class="inner">
+  <p class="kicker">一、引起動機</p>
+  <h2>你出生那天，太陽真的在白羊座嗎？</h2>
+  <p>星座運勢會這樣說：</p>
+  <p class="quote">「3月21日到4月19日之間出生的是<span class="gong">白羊宮</span>」</p>
+  <p class="ask">如果你在這段時間出生，那一天，太陽真的在天上的<span class="zuo">白羊座</span>裡嗎？</p>
+  <p class="hint">先想一想。答案在第 12 張。</p>
+</div>
+<footer class="src"><b>出處（wiki）</b>：taipei-edu-13-constellations、日期對照表　｜　<b>原始資料</b>：臺北市教育局資源 PDF 第 1 頁（② 教育機構）</footer>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-source="天文星座,黃道宮,名稱對照表" aria-label="第 3 張：星座的兩種意思">
+<div class="inner">
+  <p class="kicker">二、基本概念</p>
+  <h2>「星座」其實有兩種意思</h2>
+  <div class="grid2">
+    <div class="card z">
+      <h3><span class="zuo">天文星座</span> <span class="en">constellation</span></h3>
+      <p>寫作「<span class="zuo">○○座</span>」</p>
+      <p>國際天文學聯合會（IAU）劃定、天空中<b>有邊界的區域</b>。</p>
+      <p>例：<span class="zuo">白羊座</span></p>
+    </div>
+    <div class="card g">
+      <h3><span class="gong">黃道宮</span> <span class="en">sign</span></h3>
+      <p>寫作「<span class="gong">○○宮</span>」</p>
+      <p>把黃道<b>平均切成 12 份</b>中的一份，每份 30°。</p>
+      <p>例：<span class="gong">白羊宮</span></p>
+    </div>
+  </div>
+  <p class="note" style="margin-top:1em">名字很像，但不是同一件事。之後每一張都用顏色分開：<span class="gong">琥珀色＝宮</span>、<span class="zuo">天藍色＝座</span>。「黃道」是什麼，第 5 張說明。</p>
+</div>
+<footer class="src"><b>出處（wiki）</b>：天文星座、黃道宮、名稱對照表　｜　<b>原始資料</b>：IAU（①）、臺北市教育局資源 PDF（②）</footer>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-source="天文星座,IAU" aria-label="第 4 張：天文星座">
+<div class="inner">
+  <p class="kicker">二、基本概念</p>
+  <h2><span class="zuo">天文星座</span>：天空中有邊界的區域</h2>
+  <ul>
+    <li><b>IAU</b>（International Astronomical Union，國際天文學聯合會）的正式定義：星座是「天空中由邊界圍起來的區域」，全天共 <b>88</b> 個。</li>
+    <li>這些邊界在 <b>1928</b> 年由 IAU 大會核准。</li>
+    <li>NASA 給一般大眾的說明：星座是一群星星，像<b>連連看</b>（dot-to-dot puzzle）。</li>
+    <li>構成星座圖案的星星，大多彼此沒有關係，離地球的距離也差很多；只是從地球看過去，剛好排在一起。</li>
+  </ul>
+  <p class="note">IAU 和 NASA 都是官方機構，兩種說法這裡並列。</p>
+</div>
+<footer class="src"><b>出處（wiki）</b>：天文星座、IAU　｜　<b>原始資料</b>：IAU〈The Constellations〉（①）、NASA〈Constellations and the Calendar〉（①）</footer>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-source="黃道" aria-label="第 5 張：黃道">
+<div class="inner">
+  <p class="kicker">二、基本概念</p>
+  <h2>黃道：太陽在星星之間走的路</h2>
+  <div class="fig">
+    <div>
+      <ul>
+        <li>想像把太陽調暗到像一顆星星。地球繞太陽公轉時，從地球看，太陽會在天上的星星之間慢慢移動。這條路徑就是<b>黃道</b> <span class="en">ecliptic</span>。</li>
+        <li>NASA 的想法：從地球穿過太陽畫一條線，一直延伸到遠方的星星。地球繞太陽一圈（一年），這條線就指過一圈星星。</li>
+        <li>黃道經過的<span class="zuo">天文星座</span>共有 <b>13</b> 個。</li>
+      </ul>
+    </div>
+    <svg viewBox="0 0 640 320" role="img" aria-label="示意圖：從地球穿過太陽畫一條線，指向遠方的星星；地球繞到另一個位置時，線指向另一群星星">
+<defs><radialGradient id="sun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#f3b44a"/></radialGradient>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker></defs>
+<ellipse cx="260" cy="170" rx="140" ry="56" fill="none" class="ln" stroke-width="2"/>
+<line x1="120" y1="170" x2="575" y2="170" class="la" stroke-width="2.5" marker-end="url(#ar)"/>
+<line x1="260" y1="226" x2="260" y2="48" class="la" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ar)" opacity=".7"/>
+<circle cx="260" cy="170" r="26" fill="url(#sun)"/>
+<text x="292" y="146" font-size="20" class="t">太陽</text>
+<circle cx="120" cy="170" r="11" fill="var(--zuo)"/>
+<text x="120" y="204" font-size="20" text-anchor="middle" class="t">地球</text>
+<circle cx="260" cy="226" r="9" fill="var(--zuo)" opacity=".6"/>
+<text x="272" y="258" font-size="18" class="m">繞到另一個位置的地球</text>
+<g fill="#fff"><circle cx="596" cy="150" r="2.4"/><circle cx="610" cy="176" r="2"/><circle cx="590" cy="192" r="2.6"/><circle cx="618" cy="160" r="1.6"/><circle cx="604" cy="204" r="1.8"/></g>
+<text x="634" y="130" font-size="18" text-anchor="end" class="m">遠方的星星</text>
+<g fill="#fff"><circle cx="246" cy="30" r="2.2"/><circle cx="270" cy="22" r="1.8"/><circle cx="282" cy="40" r="2.4"/><circle cx="236" cy="46" r="1.6"/></g>
+<text x="296" y="34" font-size="18" class="m">另一群星星</text>
+</svg>
+  </div>
+</div>
+<footer class="src"><b>出處（wiki）</b>：黃道　｜　<b>原始資料</b>：臺北市教育局資源 PDF 第 3 頁（②）、NASA（①）、IAU 天文教育辦公室 astro4edu（①）</footer>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-source="黃道宮,黃道" aria-label="第 6 張：黃道宮">
+<div class="inner">
+  <p class="kicker">二、基本概念</p>
+  <h2><span class="gong">黃道宮</span>：把黃道切成 12 等份</h2>
+  <div class="fig">
+    <div>
+      <ul>
+        <li>3,000 多年前，巴比倫人把<b>黃道帶</b> <span class="en">zodiac</span>（黃道附近的那一圈星星）平均分成 12 份，像把披薩切成 12 片一樣大。</li>
+        <li>他們已經有 12 個月的曆法，所以每個月分到一份。</li>
+        <li>黃道一圈 360°，每一宮 <b>30°</b>，用附近的星座命名。</li>
+        <li>太陽走一圈約一年，所以經過每一宮<b>約一個月</b>。</li>
+      </ul>
+    </div>
+    <svg viewBox="0 0 430 340" role="img" aria-label="黃道一圈 360 度，平均切成 12 宮，每宮 30 度">
+<path d="M216.0,170.0 L320.0,170.0 A150,150 0 0 0 299.9,95.0 L209.8,147.0 A46,46 0 0 1 216.0,170.0 Z" class="g1" stroke="var(--bg)" stroke-width="2"/>
+<text x="266.6" y="149.1" font-size="15" text-anchor="middle" class="ink" font-weight="700">白羊宮</text>
+<path d="M209.8,147.0 L299.9,95.0 A150,150 0 0 0 245.0,40.1 L193.0,130.2 A46,46 0 0 1 209.8,147.0 Z" class="g2" stroke="var(--bg)" stroke-width="2"/>
+<text x="240.7" y="104.3" font-size="15" text-anchor="middle" class="ink" font-weight="700">金牛宮</text>
+<path d="M193.0,130.2 L245.0,40.1 A150,150 0 0 0 170.0,20.0 L170.0,124.0 A46,46 0 0 1 193.0,130.2 Z" class="g1" stroke="var(--bg)" stroke-width="2"/>
+<text x="195.9" y="78.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">雙子宮</text>
+<path d="M170.0,124.0 L170.0,20.0 A150,150 0 0 0 95.0,40.1 L147.0,130.2 A46,46 0 0 1 170.0,124.0 Z" class="g2" stroke="var(--bg)" stroke-width="2"/>
+<text x="144.1" y="78.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">巨蟹宮</text>
+<path d="M147.0,130.2 L95.0,40.1 A150,150 0 0 0 40.1,95.0 L130.2,147.0 A46,46 0 0 1 147.0,130.2 Z" class="g1" stroke="var(--bg)" stroke-width="2"/>
+<text x="99.3" y="104.3" font-size="15" text-anchor="middle" class="ink" font-weight="700">獅子宮</text>
+<path d="M130.2,147.0 L40.1,95.0 A150,150 0 0 0 20.0,170.0 L124.0,170.0 A46,46 0 0 1 130.2,147.0 Z" class="g2" stroke="var(--bg)" stroke-width="2"/>
+<text x="73.4" y="149.1" font-size="15" text-anchor="middle" class="ink" font-weight="700">處女宮</text>
+<path d="M124.0,170.0 L20.0,170.0 A150,150 0 0 0 40.1,245.0 L130.2,193.0 A46,46 0 0 1 124.0,170.0 Z" class="g1" stroke="var(--bg)" stroke-width="2"/>
+<text x="73.4" y="200.9" font-size="15" text-anchor="middle" class="ink" font-weight="700">天秤宮</text>
+<path d="M130.2,193.0 L40.1,245.0 A150,150 0 0 0 95.0,299.9 L147.0,209.8 A46,46 0 0 1 130.2,193.0 Z" class="g2" stroke="var(--bg)" stroke-width="2"/>
+<text x="99.3" y="245.7" font-size="15" text-anchor="middle" class="ink" font-weight="700">天蠍宮</text>
+<path d="M147.0,209.8 L95.0,299.9 A150,150 0 0 0 170.0,320.0 L170.0,216.0 A46,46 0 0 1 147.0,209.8 Z" class="g1" stroke="var(--bg)" stroke-width="2"/>
+<text x="144.1" y="271.6" font-size="15" text-anchor="middle" class="ink" font-weight="700">射手宮</text>
+<path d="M170.0,216.0 L170.0,320.0 A150,150 0 0 0 245.0,299.9 L193.0,209.8 A46,46 0 0 1 170.0,216.0 Z" class="g2" stroke="var(--bg)" stroke-width="2"/>
+<text x="195.9" y="271.6" font-size="15" text-anchor="middle" class="ink" font-weight="700">摩羯宮</text>
+<path d="M193.0,209.8 L245.0,299.9 A150,150 0 0 0 299.9,245.0 L209.8,193.0 A46,46 0 0 1 193.0,209.8 Z" class="g1" stroke="var(--bg)" stroke-width="2"/>
+<text x="240.7" y="245.7" font-size="15" text-anchor="middle" class="ink" font-weight="700">水瓶宮</text>
+<path d="M209.8,193.0 L299.9,245.0 A150,150 0 0 0 320.0,170.0 L216.0,170.0 A46,46 0 0 1 209.8,193.0 Z" class="g2" stroke="var(--bg)" stroke-width="2"/>
+<text x="266.6" y="200.9" font-size="15" text-anchor="middle" class="ink" font-weight="700">雙魚宮</text>
+<text x="170" y="166" font-size="15" text-anchor="middle" class="t" font-weight="700">360°</text>
+<text x="170" y="186" font-size="12" text-anchor="middle" class="m">每宮 30°</text>
+<line x1="216" y1="170" x2="338" y2="170" class="la" stroke-width="2.5"/>
+<text x="342" y="175" font-size="14" class="t">起點</text>
+<text x="342" y="193" font-size="12" class="m">（第 8 張）</text>
+</svg>
+  </div>
+</div>
+<footer class="src"><b>出處（wiki）</b>：黃道宮、黃道　｜　<b>原始資料</b>：NASA（①）、臺北市教育局資源 PDF 第 4–10 頁（②）</footer>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-source="黃道宮,名稱對照表" aria-label="第 7 張：12 個宮的名字">
+<div class="inner">
+  <p class="kicker">二、基本概念</p>
+  <h2>12 個宮的名字</h2>
+  <div class="names-wrap">
+  <table class="names">
+    <thead><tr><th><span class="gong">黃道宮</span></th><th>英文宮名</th><th>對應的<span class="zuo">天文星座</span></th><th>拉丁名</th></tr></thead>
+    <tbody>
+      <tr><td class="gong">白羊宮</td><td>Aries</td><td><span class="zuo">白羊座</span></td><td>Aries</td></tr>
+      <tr><td class="gong">金牛宮</td><td>Taurus</td><td><span class="zuo">金牛座</span></td><td>Taurus</td></tr>
+      <tr><td class="gong">雙子宮</td><td>Gemini</td><td><span class="zuo">雙子座</span></td><td>Gemini</td></tr>
+      <tr><td class="gong">巨蟹宮</td><td>Cancer</td><td><span class="zuo">巨蟹座</span></td><td>Cancer</td></tr>
+      <tr><td class="gong">獅子宮</td><td>Leo</td><td><span class="zuo">獅子座</span></td><td>Leo</td></tr>
+      <tr class="diff"><td class="gong">處女宮</td><td>Virgo</td><td><span class="zuo">室女座</span><span class="en">（民間通稱處女座）</span></td><td>Virgo</td></tr>
+    </tbody>
+  </table>
+  <table class="names">
+    <thead><tr><th><span class="gong">黃道宮</span></th><th>英文宮名</th><th>對應的<span class="zuo">天文星座</span></th><th>拉丁名</th></tr></thead>
+    <tbody>
+      <tr><td class="gong">天秤宮</td><td>Libra</td><td><span class="zuo">天秤座</span></td><td>Libra</td></tr>
+      <tr><td class="gong">天蠍宮</td><td>Scorpio</td><td><span class="zuo">天蠍座</span></td><td>Scorpius</td></tr>
+      <tr class="diff"><td class="gong">射手宮</td><td>Sagittarius</td><td><span class="zuo">人馬座</span><span class="en">（民間通稱射手座）</span></td><td>Sagittarius</td></tr>
+      <tr><td class="gong">摩羯宮</td><td>Capricorn</td><td><span class="zuo">摩羯座</span></td><td>Capricornus</td></tr>
+      <tr class="diff"><td class="gong">水瓶宮</td><td>Aquarius</td><td><span class="zuo">寶瓶座</span><span class="en">（民間通稱水瓶座）</span></td><td>Aquarius</td></tr>
+      <tr><td class="gong">雙魚宮</td><td>Pisces</td><td><span class="zuo">雙魚座</span></td><td>Pisces</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note" style="margin-top:.7em">底色較亮的 3 列，宮名和座名不一樣：寫「處女宮」就是黃道宮，寫「室女座」就是天文星座。括號裡是民間通稱。英文也分開：天蠍座是 Scorpius、天蠍宮是 Scorpio。</p>
+</div>
+<footer class="src"><b>出處（wiki）</b>：黃道宮、名稱對照表　｜　<b>原始資料</b>：臺北市教育局資源 PDF 第 20 頁（②）、IAU（①）</footer>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-source="春分點,黃道宮,依巴谷" aria-label="第 8 張：春分點">
+<div class="inner">
+  <p class="kicker">二、基本概念</p>
+  <h2>起點：春分點</h2>
+  <div class="fig">
+    <div>
+      <ul>
+        <li>黃道一圈沒有天然的起點。黃道宮從<b>春分點</b> <span class="en">vernal equinox</span> 開始算：春分那天（3 月 21 日前後），太陽在黃道上的位置。</li>
+        <li>它是黃道和<b>天赤道</b> <span class="en">celestial equator</span>（把地球赤道往外延伸到天空的那一圈）的交點。</li>
+        <li>西元前 2 世紀，希臘天文學家<b>依巴谷</b>（Hipparchus）觀察到春分點在<span class="zuo">白羊座</span>，「所以就以<span class="gong">白羊宮</span>作為『黃道十二宮』的起點」。</li>
+        <li>所以當時 3 月 21 日到 4 月 19 日出生的人，出生那天太陽在<span class="zuo">白羊座</span>，屬於<span class="gong">白羊宮</span>。</li>
+      </ul>
+    </div>
+    <svg viewBox="0 0 640 300" role="img" aria-label="示意圖：把天空攤平，黃道和天赤道在春分點和秋分點交叉">
+<line x1="20" y1="150" x2="620" y2="150" class="lm" stroke-width="2" stroke-dasharray="6 5"/>
+<polyline points="20,230.0 30,229.6 40,228.3 50,226.1 60,223.1 70,219.3 80,214.7 90,209.5 100,203.5 110,197.0 120,190.0 130,182.5 140,174.7 150,166.6 160,158.4 170,150.0 180,141.6 190,133.4 200,125.3 210,117.5 220,110.0 230,103.0 240,96.5 250,90.5 260,85.3 270,80.7 280,76.9 290,73.9 300,71.7 310,70.4 320,70.0 330,70.4 340,71.7 350,73.9 360,76.9 370,80.7 380,85.3 390,90.5 400,96.5 410,103.0 420,110.0 430,117.5 440,125.3 450,133.4 460,141.6 470,150.0 480,158.4 490,166.6 500,174.7 510,182.5 520,190.0 530,197.0 540,203.5 550,209.5 560,214.7 570,219.3 580,223.1 590,226.1 600,228.3 610,229.6 620,230.0" fill="none" class="lt" stroke-width="3"/>
+<text x="26" y="140" font-size="16" class="m">天赤道</text>
+<text x="320" y="56" font-size="18" text-anchor="middle" class="t" font-weight="700">黃道</text>
+<circle cx="170" cy="150" r="9" fill="var(--accent)"/>
+<text x="170" y="186" font-size="18" text-anchor="middle" class="t" font-weight="700">春分點</text>
+<circle cx="470" cy="150" r="9" fill="var(--accent)"/>
+<text x="470" y="186" font-size="18" text-anchor="middle" class="t" font-weight="700">秋分點</text>
+<text x="320" y="285" font-size="13" text-anchor="middle" class="m">示意圖：把天空攤成平面來看</text>
+</svg>
+  </div>
+</div>
+<footer class="src"><b>出處（wiki）</b>：春分點、黃道宮、依巴谷　｜　<b>原始資料</b>：臺北市教育局資源 PDF 第 7–11、18 頁（②）；交點的說法另見英文維基（④）</footer>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-source="歲差" aria-label="第 9 張：歲差">
+<div class="inner">
+  <p class="kicker">三、原理</p>
+  <h2>歲差：地球像陀螺一樣慢慢晃</h2>
+  <div class="fig">
+    <div>
+      <ul>
+        <li>地球自轉軸：可以想成穿過北極的那根軸，它指著天空的某個方向。</li>
+        <li><b>歲差</b> <span class="en">precession</span>：地球自轉軸的指向，緩慢而連續地改變。</li>
+        <li>就像陀螺一樣，非常、非常慢地晃動。</li>
+        <li>為什麼會晃？地球不是正圓，赤道比較鼓；太陽和月球拉扯鼓起的部分，讓自轉軸慢慢轉動。</li>
+      </ul>
+    </div>
+    <svg viewBox="0 0 340 330" role="img" aria-label="示意圖：地球自轉軸像陀螺一樣，軸的方向沿著一個圓圈慢慢轉">
+<defs><radialGradient id="earth" cx="40%" cy="35%" r="65%"><stop offset="0" stop-color="#9fdcff"/><stop offset="1" stop-color="#2a6fb0"/></radialGradient>
+<marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--gong)"/></marker></defs>
+<line x1="170" y1="200" x2="170" y2="52" class="ln" stroke-width="1.5" stroke-dasharray="4 4"/>
+<ellipse cx="170" cy="62" rx="44" ry="12" fill="none" class="lg" stroke-width="2.5" stroke-dasharray="7 5"/>
+<path d="M126,64 A44,12 0 0 0 150,73" fill="none" class="lg" stroke-width="2.5" marker-end="url(#ar2)"/>
+<circle cx="170" cy="200" r="74" fill="url(#earth)"/>
+<line x1="214" y1="62" x2="126" y2="326" class="lt" stroke-width="3"/>
+<circle cx="214" cy="62" r="5" fill="var(--text)"/>
+<text x="224" y="58" font-size="15" class="t">北極指的方向</text>
+<text x="62" y="300" font-size="16" class="t">自轉軸</text>
+<text x="170" y="22" font-size="14" text-anchor="middle" class="tg">軸的方向沿著這圈慢慢轉</text>
+</svg>
+  </div>
+</div>
+<footer class="src"><b>出處（wiki）</b>：歲差　｜　<b>原始資料</b>：定義：臺北市教育局資源 PDF 第 12 頁（②）、中文維基〈歲差〉（④）；陀螺的比喻：Slate（Phil Plait，③）、中文維基（④）；成因：中文維基（④）</footer>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-source="歲差,春分點" aria-label="第 10 張：春分點移動">
+<div class="inner">
+  <p class="kicker">三、原理</p>
+  <h2>春分點跟著慢慢移動</h2>
+  <ul>
+    <li>自轉軸的方向改變，春分點在星空中的位置也跟著慢慢移動。</li>
+    <li>速度：大約 <b>72 年移動 1°</b>。</li>
+    <li>從依巴谷的年代（西元前 2 世紀）到現在，春分點沿著黃道移動了<b>將近 30°</b>，幾乎是一個宮的範圍。</li>
+    <li>結果：現在春分那天，太陽在<span class="zuo">雙魚座</span>，不再是<span class="zuo">白羊座</span>。</li>
+  </ul>
+  <svg viewBox="0 0 680 190" role="img" aria-label="示意圖：春分點從西元前 2 世紀的白羊座，沿著黃道移到現在的雙魚座" style="max-width:820px;width:100%;height:auto;margin-top:.6em">
+<defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker></defs>
+<rect x="30" y="40" width="290" height="100" rx="12" fill="var(--zuo-bg)" class="lz" stroke-width="1.5"/>
+<rect x="330" y="40" width="320" height="100" rx="12" fill="var(--zuo-bg)" class="lz" stroke-width="1.5"/>
+<text x="50" y="66" font-size="18" class="tz" font-weight="700">白羊座</text>
+<text x="350" y="66" font-size="18" class="tz" font-weight="700">雙魚座</text>
+<line x1="10" y1="100" x2="670" y2="100" class="lt" stroke-width="2.5"/>
+<text x="664" y="92" font-size="15" text-anchor="end" class="t">黃道</text>
+<circle cx="285" cy="100" r="8" fill="var(--accent)"/>
+<circle cx="500" cy="100" r="8" fill="var(--accent)"/>
+<path d="M296,116 Q392,152 488,116" fill="none" class="la" stroke-width="2.5" marker-end="url(#ar3)"/>
+<text x="285" y="170" font-size="15" text-anchor="middle" class="t">西元前 2 世紀的春分點</text>
+<text x="500" y="170" font-size="15" text-anchor="middle" class="t">現在的春分點</text>
+<text x="392" y="30" font-size="13" text-anchor="middle" class="m">示意圖，大小不按比例</text>
+</svg>
+</div>
+<footer class="src"><b>出處（wiki）</b>：歲差、春分點　｜　<b>原始資料</b>：臺北市教育局資源 PDF 第 12–13 頁（②）；英文維基說法一致（④）</footer>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-source="歲差,黃道,常見誤解,天文星座" aria-label="第 11 張：什麼變了">
+<div class="inner">
+  <p class="kicker">三、原理</p>
+  <h2>什麼變了？什麼沒變？</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>沒變</h3>
+      <ul>
+        <li><b>黃道的位置</b>：數千年來，地球繞太陽的軌道幾乎不變，歲差不會影響它。</li>
+        <li><b><span class="zuo">星座</span>本身</b>：星星非常遠，星座的形狀和位置，在一個人的一生中幾乎看不出變化。</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>變了</h3>
+      <ul>
+        <li><b>春分點在黃道上的位置</b>：所以從春分點算起的<span class="gong">黃道宮</span>，跟<span class="zuo">天文星座</span>越差越遠。</li>
+        <li><b>太陽位於各星座的日期</b>。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer class="src"><b>出處（wiki）</b>：歲差、黃道、常見誤解、天文星座　｜　<b>原始資料</b>：臺北市教育局資源 PDF 第 18 頁（②）、NASA（①）、Slate（③）；「越差越遠」：英文維基（④）</footer>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-source="春分點,日期對照表,黃道宮,回歸黃道" aria-label="第 12 張：回到開頭的問題">
+<div class="inner">
+  <p class="kicker">四、例子</p>
+  <h2>回到開頭的問題</h2>
+  <ul>
+    <li>依回歸黃道（大部分西方占星用的劃分方法，第 14 張說明），<span class="gong">白羊宮</span>從 3 月 21 日開始，到 4 月 19 日。</li>
+    <li>但太陽約在 4 月 18 日才進入天文學上的<span class="zuo">白羊座</span>。在那之前，3 月 11 日到 4 月 18 日，太陽在<span class="zuo">雙魚座</span>。</li>
+    <li>Phil Plait 的例子：古希臘時 3 月下旬出生的人，出生時太陽在<span class="zuo">白羊座</span>；今天則在<span class="zuo">雙魚座</span>。</li>
+  </ul>
+  <div class="hscroll"><svg viewBox="0 0 1000 174" role="img" aria-label="3 月到 5 月的放大圖：白羊宮從 3 月 21 日開始，太陽約 4 月 18 日才進入白羊座">
+<rect x="12.0" y="30" width="241.0" height="38" rx="4" class="g2" stroke="var(--bg)" stroke-width="1.5"><title>雙魚宮（回歸黃道）2月19日 – 3月20日</title></rect>
+<text x="132.5" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">雙魚宮</text>
+<rect x="253.0" y="30" width="361.5" height="38" rx="4" class="g1" stroke="var(--bg)" stroke-width="1.5"><title>白羊宮（回歸黃道）3月21日 – 4月19日</title></rect>
+<text x="433.7" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">白羊宮</text>
+<rect x="614.5" y="30" width="373.5" height="38" rx="4" class="g2" stroke="var(--bg)" stroke-width="1.5"><title>金牛宮（回歸黃道）4月20日 – 5月20日</title></rect>
+<text x="801.2" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">金牛宮</text>
+<rect x="12.0" y="84" width="126.5" height="38" rx="4" class="z2" stroke="var(--bg)" stroke-width="1.5"><title>寶瓶座（IAU 邊界）2/16 – 3/11</title></rect>
+<text x="75.3" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">寶瓶座</text>
+<rect x="138.5" y="84" width="457.9" height="38" rx="4" class="z1" stroke="var(--bg)" stroke-width="1.5"><title>雙魚座（IAU 邊界）3/11 – 4/18</title></rect>
+<text x="367.5" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">雙魚座</text>
+<rect x="596.4" y="84" width="301.2" height="38" rx="4" class="z2" stroke="var(--bg)" stroke-width="1.5"><title>白羊座（IAU 邊界）4/18 – 5/13</title></rect>
+<text x="747.0" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">白羊座</text>
+<rect x="897.6" y="84" width="90.4" height="38" rx="4" class="z1" stroke="var(--bg)" stroke-width="1.5"><title>金牛座（IAU 邊界）5/13 – 6/21</title></rect>
+<text x="942.8" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">金牛座</text>
+<line x1="253.0" y1="22" x2="253.0" y2="130" class="lg" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="253.0" y="18" font-size="15" text-anchor="middle" class="tg" font-weight="700">3/21 白羊宮開始</text>
+<line x1="596.4" y1="22" x2="596.4" y2="130" class="lz" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="596.4" y="146" font-size="15" text-anchor="middle" class="tz" font-weight="700">4/18 進入白羊座</text>
+</svg></div>
+  <p class="answer">答案：不一定。同一個「白羊」，<span class="gong">宮</span>和<span class="zuo">座</span>差了將近一個月。</p>
+</div>
+<footer class="src"><b>出處（wiki）</b>：春分點、日期對照表、黃道宮、回歸黃道　｜　<b>原始資料</b>：宮的日期：臺北市教育局資源 PDF 第 20 頁（②）；座的日期：英文維基日期表（④，準確到 2011 年）；Slate（③）</footer>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-source="日期對照表,黃道宮" aria-label="第 13 張：星座有大有小">
+<div class="inner">
+  <p class="kicker">四、例子</p>
+  <h2>星座有大有小，宮卻一樣大</h2>
+  <ul>
+    <li><span class="gong">黃道宮</span>是等分的，每宮約一個月。</li>
+    <li><span class="zuo">天文星座</span>有大有小。NASA 說，從地球穿過太陽的那條線，指向<span class="zuo">室女座</span> 45 天，指向<span class="zuo">天蠍座</span>只有 7 天。</li>
+  </ul>
+  <div class="legend"><span><span class="sw g"></span>上排：回歸黃道的 12 宮</span><span><span class="sw z"></span>下排：太陽實際所在的天文星座（IAU 邊界）</span></div>
+  <div class="hscroll"><svg viewBox="0 0 1000 196" role="img" aria-label="一年的時間軸：上排是回歸黃道的 12 宮，下排是太陽實際所在的 13 個天文星座">
+<rect x="62.8" y="30" width="80.2" height="38" rx="4" class="g1" stroke="var(--bg)" stroke-width="1.5"><title>水瓶宮（回歸黃道）1月20日 – 2月18日</title></rect>
+<text x="102.9" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">水瓶宮</text>
+<rect x="143.0" y="30" width="80.2" height="38" rx="4" class="g2" stroke="var(--bg)" stroke-width="1.5"><title>雙魚宮（回歸黃道）2月19日 – 3月20日</title></rect>
+<text x="183.1" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">雙魚宮</text>
+<rect x="223.2" y="30" width="80.2" height="38" rx="4" class="g1" stroke="var(--bg)" stroke-width="1.5"><title>白羊宮（回歸黃道）3月21日 – 4月19日</title></rect>
+<text x="263.4" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">白羊宮</text>
+<rect x="303.5" y="30" width="82.9" height="38" rx="4" class="g2" stroke="var(--bg)" stroke-width="1.5"><title>金牛宮（回歸黃道）4月20日 – 5月20日</title></rect>
+<text x="344.9" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">金牛宮</text>
+<rect x="386.4" y="30" width="85.6" height="38" rx="4" class="g1" stroke="var(--bg)" stroke-width="1.5"><title>雙子宮（回歸黃道）5月21日 – 6月21日</title></rect>
+<text x="429.1" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">雙子宮</text>
+<rect x="471.9" y="30" width="82.9" height="38" rx="4" class="g2" stroke="var(--bg)" stroke-width="1.5"><title>巨蟹宮（回歸黃道）6月22日 – 7月22日</title></rect>
+<text x="513.4" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">巨蟹宮</text>
+<rect x="554.8" y="30" width="82.9" height="38" rx="4" class="g1" stroke="var(--bg)" stroke-width="1.5"><title>獅子宮（回歸黃道）7月23日 – 8月22日</title></rect>
+<text x="596.3" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">獅子宮</text>
+<rect x="637.7" y="30" width="82.9" height="38" rx="4" class="g2" stroke="var(--bg)" stroke-width="1.5"><title>處女宮（回歸黃道）8月23日 – 9月22日</title></rect>
+<text x="679.2" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">處女宮</text>
+<rect x="720.6" y="30" width="82.9" height="38" rx="4" class="g1" stroke="var(--bg)" stroke-width="1.5"><title>天秤宮（回歸黃道）9月23日 – 10月23日</title></rect>
+<text x="762.0" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">天秤宮</text>
+<rect x="803.5" y="30" width="80.2" height="38" rx="4" class="g2" stroke="var(--bg)" stroke-width="1.5"><title>天蠍宮（回歸黃道）10月24日 – 11月22日</title></rect>
+<text x="843.6" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">天蠍宮</text>
+<rect x="883.7" y="30" width="77.5" height="38" rx="4" class="g1" stroke="var(--bg)" stroke-width="1.5"><title>射手宮（回歸黃道）11月23日 – 12月21日</title></rect>
+<text x="922.5" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">射手宮</text>
+<rect x="961.3" y="30" width="26.7" height="38" rx="4" class="g2" stroke="var(--bg)" stroke-width="1.5"><title>摩羯宮（回歸黃道）12月22日 – 1月19日</title></rect>
+<rect x="12.0" y="30" width="50.8" height="38" rx="4" class="g2" stroke="var(--bg)" stroke-width="1.5"><title>摩羯宮（回歸黃道）12月22日 – 1月19日</title></rect>
+<text x="37.4" y="53.7" font-size="13" text-anchor="middle" class="ink" font-weight="700">摩羯宮</text>
+<rect x="64.1" y="84" width="72.2" height="38" rx="4" class="z1" stroke="var(--bg)" stroke-width="1.5"><title>摩羯座（IAU 邊界）1/20 – 2/16</title></rect>
+<text x="100.2" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">摩羯座</text>
+<rect x="136.3" y="84" width="61.5" height="38" rx="4" class="z2" stroke="var(--bg)" stroke-width="1.5"><title>寶瓶座（IAU 邊界）2/16 – 3/11</title></rect>
+<text x="167.1" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">寶瓶座</text>
+<rect x="197.8" y="84" width="101.6" height="38" rx="4" class="z1" stroke="var(--bg)" stroke-width="1.5"><title>雙魚座（IAU 邊界）3/11 – 4/18</title></rect>
+<text x="248.6" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">雙魚座</text>
+<rect x="299.5" y="84" width="66.8" height="38" rx="4" class="z2" stroke="var(--bg)" stroke-width="1.5"><title>白羊座（IAU 邊界）4/18 – 5/13</title></rect>
+<text x="332.9" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">白羊座</text>
+<rect x="366.3" y="84" width="104.3" height="38" rx="4" class="z1" stroke="var(--bg)" stroke-width="1.5"><title>金牛座（IAU 邊界）5/13 – 6/21</title></rect>
+<text x="418.4" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">金牛座</text>
+<rect x="470.6" y="84" width="77.5" height="38" rx="4" class="z2" stroke="var(--bg)" stroke-width="1.5"><title>雙子座（IAU 邊界）6/21 – 7/20</title></rect>
+<text x="509.4" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">雙子座</text>
+<rect x="548.1" y="84" width="56.2" height="38" rx="4" class="z1" stroke="var(--bg)" stroke-width="1.5"><title>巨蟹座（IAU 邊界）7/20 – 8/10</title></rect>
+<text x="576.2" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">巨蟹座</text>
+<rect x="604.3" y="84" width="98.9" height="38" rx="4" class="z2" stroke="var(--bg)" stroke-width="1.5"><title>獅子座（IAU 邊界）8/10 – 9/16</title></rect>
+<text x="653.8" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">獅子座</text>
+<rect x="703.2" y="84" width="117.7" height="38" rx="4" class="z1" stroke="var(--bg)" stroke-width="1.5"><title>室女座（IAU 邊界）9/16 – 10/30</title></rect>
+<text x="762.0" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">室女座</text>
+<rect x="820.9" y="84" width="64.2" height="38" rx="4" class="z2" stroke="var(--bg)" stroke-width="1.5"><title>天秤座（IAU 邊界）10/30 – 11/23</title></rect>
+<text x="853.0" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">天秤座</text>
+<rect x="885.1" y="84" width="16.0" height="38" rx="4" class="z1" stroke="var(--bg)" stroke-width="1.5"><title>天蠍座（IAU 邊界）11/23 – 11/29</title></rect>
+<line x1="893.1" y1="122" x2="893.1" y2="136" class="lz" stroke-width="1.5"/>
+<text x="893.1" y="148" font-size="13" text-anchor="middle" class="tz" font-weight="700">天蠍座</text>
+<rect x="901.1" y="84" width="48.1" height="38" rx="4" class="zoph" stroke="var(--bg)" stroke-width="1.5"><title>蛇夫座（IAU 邊界）11/29 – 12/17</title></rect>
+<text x="925.2" y="107.7" font-size="13" text-anchor="middle" class="ink" font-weight="700">蛇夫座</text>
+<rect x="949.2" y="84" width="38.8" height="38" rx="4" class="z2" stroke="var(--bg)" stroke-width="1.5"><title>人馬座（IAU 邊界）12/17 – 1/20</title></rect>
+<rect x="12.0" y="84" width="52.1" height="38" rx="4" class="z2" stroke="var(--bg)" stroke-width="1.5"><title>人馬座（IAU 邊界）12/17 – 1/20</title></rect>
+<text x="38.1" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">人馬座</text>
+<line x1="12" y1="168" x2="988" y2="168" class="ln" stroke-width="1"/>
+<line x1="12.0" y1="164" x2="12.0" y2="172" class="lm" stroke-width="1"/>
+<text x="15.0" y="186" font-size="13" class="m">1月</text>
+<line x1="94.9" y1="164" x2="94.9" y2="172" class="lm" stroke-width="1"/>
+<text x="97.9" y="186" font-size="13" class="m">2月</text>
+<line x1="169.8" y1="164" x2="169.8" y2="172" class="lm" stroke-width="1"/>
+<text x="172.8" y="186" font-size="13" class="m">3月</text>
+<line x1="252.7" y1="164" x2="252.7" y2="172" class="lm" stroke-width="1"/>
+<text x="255.7" y="186" font-size="13" class="m">4月</text>
+<line x1="332.9" y1="164" x2="332.9" y2="172" class="lm" stroke-width="1"/>
+<text x="335.9" y="186" font-size="13" class="m">5月</text>
+<line x1="415.8" y1="164" x2="415.8" y2="172" class="lm" stroke-width="1"/>
+<text x="418.8" y="186" font-size="13" class="m">6月</text>
+<line x1="496.0" y1="164" x2="496.0" y2="172" class="lm" stroke-width="1"/>
+<text x="499.0" y="186" font-size="13" class="m">7月</text>
+<line x1="578.9" y1="164" x2="578.9" y2="172" class="lm" stroke-width="1"/>
+<text x="581.9" y="186" font-size="13" class="m">8月</text>
+<line x1="661.8" y1="164" x2="661.8" y2="172" class="lm" stroke-width="1"/>
+<text x="664.8" y="186" font-size="13" class="m">9月</text>
+<line x1="742.0" y1="164" x2="742.0" y2="172" class="lm" stroke-width="1"/>
+<text x="745.0" y="186" font-size="13" class="m">10月</text>
+<line x1="824.9" y1="164" x2="824.9" y2="172" class="lm" stroke-width="1"/>
+<text x="827.9" y="186" font-size="13" class="m">11月</text>
+<line x1="905.1" y1="164" x2="905.1" y2="172" class="lm" stroke-width="1"/>
+<text x="908.1" y="186" font-size="13" class="m">12月</text>
+</svg></div>
+  <p class="note">圖是把日期對照表的日期直接畫在一年的時間軸上。下排比上排多一個：<span class="zuo">蛇夫座</span>（第 15 張）。</p>
+</div>
+<footer class="src"><b>出處（wiki）</b>：日期對照表、黃道宮　｜　<b>原始資料</b>：上排：臺北市教育局資源 PDF 第 20 頁（②）；下排：英文維基日期表（④，準確到 2011 年）；NASA（①）</footer>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-source="回歸黃道,恆星黃道,日期對照表" aria-label="第 14 張：兩套黃道宮系統">
+<div class="inner">
+  <p class="kicker">四、例子</p>
+  <h2>兩套黃道宮系統</h2>
+  <div class="grid2">
+    <div class="card g">
+      <h3>回歸黃道 <span class="en">tropical zodiac</span></h3>
+      <ul>
+        <li><span class="gong">白羊宮</span>的起點永遠定在春分點。</li>
+        <li>以季節定義，不考慮歲差。</li>
+        <li>大部分西方占星使用。</li>
+      </ul>
+      <p><span class="gong">白羊宮</span>：3 月 21 日 – 4 月 19 日</p>
+    </div>
+    <div class="card g">
+      <h3>恆星黃道 <span class="en">sidereal zodiac</span></h3>
+      <ul>
+        <li>以看得到的星空為準。</li>
+        <li>用 <b>ayanamsa</b>（修正歲差的方法）讓宮跟星座對齊。</li>
+        <li>印度占星主要使用。</li>
+      </ul>
+      <p><span class="gong">白羊宮</span>：4 月 14 日 – 5 月 14 日</p>
+    </div>
+  </div>
+  <p style="margin-top:.8em">兩者約 2,000 年前對齊，之後因為歲差逐漸分開；依最常用的算法，現在差約 24°。</p>
+  <p class="note">這裡只說明兩種系統的定義，不比較哪一種比較好。</p>
+</div>
+<footer class="src"><b>出處（wiki）</b>：回歸黃道、恆星黃道、日期對照表　｜　<b>原始資料</b>：定義與 24°：英文維基、Kerykeion（④）；日期：臺北市教育局資源 PDF 第 20 頁（②）</footer>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-source="蛇夫座,黃道" aria-label="第 15 張：蛇夫座">
+<div class="inner">
+  <p class="kicker">四、例子</p>
+  <h2><span class="zuo">蛇夫座</span>：黃道上的第 13 個天文星座</h2>
+  <ul>
+    <li>星圖上，黃道穿過<span class="zuo">蛇夫座</span>（Ophiuchus）的腳，所以它也是黃道上的天文星座。</li>
+    <li>太陽在 <b>11 月下旬到 12 月中旬</b>位於<span class="zuo">蛇夫座</span>。</li>
+    <li>NASA：依巴比倫人自己的古老記載，黃道帶裡有 13 個星座。為了配合 12 個月，他們挑了<span class="zuo">蛇夫座</span>排除。</li>
+    <li>在傳統的回歸黃道、恆星黃道占星中，<span class="zuo">蛇夫座</span>不是黃道宮。</li>
+  </ul>
+  <div class="hscroll"><svg viewBox="0 0 1000 174" role="img" aria-label="11 月到 12 月的放大圖：太陽在天蠍座之後進入蛇夫座">
+<rect x="12.0" y="30" width="244.0" height="38" rx="4" class="g2" stroke="var(--bg)" stroke-width="1.5"><title>天蠍宮（回歸黃道）10月24日 – 11月22日</title></rect>
+<text x="134.0" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">天蠍宮</text>
+<rect x="256.0" y="30" width="544.3" height="38" rx="4" class="g1" stroke="var(--bg)" stroke-width="1.5"><title>射手宮（回歸黃道）11月23日 – 12月21日</title></rect>
+<text x="528.2" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">射手宮</text>
+<rect x="800.3" y="30" width="187.7" height="38" rx="4" class="g2" stroke="var(--bg)" stroke-width="1.5"><title>摩羯宮（回歸黃道）12月22日 – 1月19日</title></rect>
+<text x="894.2" y="54.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">摩羯宮</text>
+<rect x="12.0" y="84" width="253.4" height="38" rx="4" class="z2" stroke="var(--bg)" stroke-width="1.5"><title>天秤座（IAU 邊界）10/30 – 11/23</title></rect>
+<text x="138.7" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">天秤座</text>
+<rect x="265.4" y="84" width="112.6" height="38" rx="4" class="z1" stroke="var(--bg)" stroke-width="1.5"><title>天蠍座（IAU 邊界）11/23 – 11/29</title></rect>
+<text x="321.7" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">天蠍座</text>
+<rect x="378.0" y="84" width="337.8" height="38" rx="4" class="zoph" stroke="var(--bg)" stroke-width="1.5"><title>蛇夫座（IAU 邊界）11/29 – 12/17</title></rect>
+<text x="546.9" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">蛇夫座</text>
+<rect x="715.8" y="84" width="272.2" height="38" rx="4" class="z2" stroke="var(--bg)" stroke-width="1.5"><title>人馬座（IAU 邊界）12/17 – 1/20</title></rect>
+<text x="851.9" y="108.4" font-size="15" text-anchor="middle" class="ink" font-weight="700">人馬座</text>
+<line x1="378.0" y1="22" x2="378.0" y2="130" class="lz" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="378.0" y="146" font-size="15" text-anchor="middle" class="tz" font-weight="700">11/29</text>
+<line x1="715.8" y1="22" x2="715.8" y2="130" class="lz" stroke-width="2" stroke-dasharray="4 3"/>
+<text x="715.8" y="146" font-size="15" text-anchor="middle" class="tz" font-weight="700">12/17</text>
+</svg></div>
+</div>
+<footer class="src"><b>出處（wiki）</b>：蛇夫座、黃道　｜　<b>原始資料</b>：臺北市教育局資源 PDF 第 14 頁（②）、astro4edu（①）、NASA（①）；占星中的地位與圖中日期：英文維基（④，準確到 2011 年）</footer>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-source="日期對照表" aria-label="第 16 張：查查你的生日">
+<div class="inner lookup">
+  <p class="kicker">四、例子</p>
+  <h2>查查你的生日</h2>
+  <div class="pick">
+    <label for="lk-m">生日：</label>
+    <select id="lk-m" aria-label="月"></select><span>月</span>
+    <select id="lk-d" aria-label="日"></select><span>日</span>
+  </div>
+  <div class="res" aria-live="polite">
+    <div class="card g"><p class="lab">依回歸黃道</p><p class="val gong" id="lk-trop">—</p><p class="why">臺北市教育局資源 PDF（②）</p></div>
+    <div class="card g"><p class="lab">依恆星黃道</p><p class="val gong" id="lk-sid">—</p><p class="why">臺北市教育局資源 PDF（②），未註明 ayanamsa</p></div>
+    <div class="card z"><p class="lab">那天太陽實際在</p><p class="val zuo" id="lk-iau">—</p><p class="why">IAU 邊界；英文維基日期表（④），準確到 2011 年</p></div>
+  </div>
+  <p class="cmp" id="lk-cmp"></p>
+  <p class="note">兩個來源有幾個交界日差 1 天；英文維基說日期每 70.5 年推移 1 天。生日剛好在交界附近時，結果可能差一天。</p>
+</div>
+<footer class="src"><b>出處（wiki）</b>：日期對照表　｜　<b>原始資料</b>：臺北市教育局資源 PDF 第 20 頁（②）、英文維基日期表（④）</footer>
+</section>
+
+<!-- 17 -->
+<section class="slide" data-source="常見誤解" aria-label="第 17 張：誤解 1">
+<div class="inner">
+  <p class="kicker">五、常見誤解</p>
+  <h2>誤解 1：「NASA 改了你的星座」</h2>
+  <ul>
+    <li>2016 年，NASA 一篇給兒童看的文章在網路上流傳，讓一些人以為 NASA 把占星曆整個打亂了。</li>
+    <li>NASA 的澄清：<br><span class="big" lang="en">“We didn’t change any zodiac signs, we just did the math.”</span><br>（我們沒有改任何黃道宮，只是把數字算出來。）</li>
+    <li>真正的原因：巴比倫人在 3,000 多年前把黃道帶分成 12 份；現在地球自轉軸指的方向已經不太一樣，天空已經移動。</li>
+  </ul>
+</div>
+<footer class="src"><b>出處（wiki）</b>：常見誤解　｜　<b>原始資料</b>：NASA（①）、Smithsonian Magazine（③）</footer>
+</section>
+
+<!-- 18 -->
+<section class="slide" data-source="常見誤解,蛇夫座" aria-label="第 18 張：誤解 2">
+<div class="inner">
+  <p class="kicker">五、常見誤解</p>
+  <h2>誤解 2：「<span class="zuo">蛇夫座</span>是新加的第 13 個星座」</h2>
+  <ul>
+    <li>2011 年、2016 年都出現過「第 13 個星座」的新聞。</li>
+    <li>Phil Plait：<span class="zuo">蛇夫座</span>是古老的星座，NASA 沒有把它加進去，它一直都在。</li>
+    <li>它位在黃道上，只是不屬於傳統的 12 個黃道星座（這裡指天文星座，不是宮）。</li>
+  </ul>
+</div>
+<footer class="src"><b>出處（wiki）</b>：常見誤解、蛇夫座　｜　<b>原始資料</b>：Smithsonian Magazine（③）、Slate（Phil Plait，③）、astro4edu（①）</footer>
+</section>
+
+<!-- 19 -->
+<section class="slide" data-source="常見誤解,IAU" aria-label="第 19 張：誤解 3">
+<div class="inner">
+  <p class="kicker">五、常見誤解</p>
+  <h2>誤解 3：「IAU 在 1928 年認定<span class="zuo">蛇夫座</span>是第 13 個黃道星座」</h2>
+  <ul>
+    <li>IAU 1928 年大會核准的，是 <b>88 個星座的邊界</b>。</li>
+    <li>IAU 原文沒有「認定第十三個黃道星座」這件事。</li>
+    <li>有些資料這樣寫，但跟 IAU 原文不符。</li>
+  </ul>
+</div>
+<footer class="src"><b>出處（wiki）</b>：常見誤解、IAU　｜　<b>原始資料</b>：IAU〈The Constellations〉（①）</footer>
+</section>
+
+<!-- 20 -->
+<section class="slide" data-source="天文星座,黃道宮,春分點,歲差,日期對照表" aria-label="第 20 張：小結">
+<div class="inner">
+  <p class="kicker">六、小結</p>
+  <h2>小結</h2>
+  <ol>
+    <li>「<span class="zuo">○○座</span>」是天空中有邊界的區域；「<span class="gong">○○宮</span>」是把黃道切成 12 份中的一份。</li>
+    <li>黃道宮從春分點算起；當初春分點在<span class="zuo">白羊座</span>。</li>
+    <li>歲差讓春分點大約 72 年移動 1°；從依巴谷的年代到現在，已經移動將近 30°，幾乎是一個宮。</li>
+    <li>所以出生那天太陽所在的天文星座，可能不是同名的那一個：同一個「白羊」，<span class="gong">宮</span>和<span class="zuo">座</span>差了將近一個月。</li>
+  </ol>
+</div>
+<footer class="src"><b>出處（wiki）</b>：天文星座、黃道宮、春分點、歲差、日期對照表</footer>
+</section>
+
+<!-- 21 -->
+<section class="slide" data-source="天文星座,黃道宮,歲差" aria-label="第 21 張：小測驗（上）">
+<div class="inner">
+  <p class="kicker">七、小測驗</p>
+  <h2>小測驗（上）</h2>
+  <div class="qs">
+    <div class="q">
+      <p class="qt">1. 哪一個是 IAU 劃定的「天空中有邊界的區域」？</p>
+      <div class="opts"><button type="button" data-ok="0">白羊宮</button><button type="button" data-ok="1">白羊座</button><button type="button" data-ok="0">兩個都是</button></div>
+      <p class="fb" hidden><span class="verdict"></span>「○○座」是 IAU 劃定的天空區域；「○○宮」是把黃道切成 12 份中的一份。（出處：天文星座、黃道宮）</p>
+    </div>
+    <div class="q">
+      <p class="qt">2. 春分點大約多少年在黃道上移動 1°？</p>
+      <div class="opts"><button type="button" data-ok="0">1 年</button><button type="button" data-ok="1">約 72 年</button><button type="button" data-ok="0">約 3,000 年</button></div>
+      <p class="fb" hidden><span class="verdict"></span>大約 72 年移動 1°；從依巴谷的年代到現在，將近 30°。（出處：歲差）</p>
+    </div>
+    <div class="q">
+      <p class="qt">3. 歲差會改變黃道的位置嗎？</p>
+      <div class="opts"><button type="button" data-ok="0">會</button><button type="button" data-ok="1">不會，改變的是春分點在黃道上的位置</button></div>
+      <p class="fb" hidden><span class="verdict"></span>歲差會讓春分點沿著黃道移動，但不會改變黃道的位置；數千年來，地球繞太陽的軌道幾乎不變。（出處：歲差）</p>
+    </div>
+  </div>
+</div>
+<footer class="src"><b>出處（wiki）</b>：天文星座、黃道宮、歲差</footer>
+</section>
+
+<!-- 22 -->
+<section class="slide" data-source="IAU,常見誤解,黃道宮,日期對照表" aria-label="第 22 張：小測驗（下）">
+<div class="inner">
+  <p class="kicker">七、小測驗</p>
+  <h2>小測驗（下）</h2>
+  <div class="qs">
+    <div class="q">
+      <p class="qt">4. 1928 年 IAU 大會核准的是什麼？</p>
+      <div class="opts"><button type="button" data-ok="0">蛇夫座成為第 13 個黃道宮</button><button type="button" data-ok="1">88 個星座的邊界</button><button type="button" data-ok="0">新的 12 宮日期</button></div>
+      <p class="fb" hidden><span class="verdict"></span>IAU 原文沒有「認定第十三個黃道星座」這件事。（出處：IAU、常見誤解）</p>
+    </div>
+    <div class="q">
+      <p class="qt">5. 依 NASA 的說法，從地球穿過太陽的那條線，指向天蠍座多久？</p>
+      <div class="opts"><button type="button" data-ok="0">約一個月</button><button type="button" data-ok="1">7 天</button><button type="button" data-ok="0">45 天</button></div>
+      <p class="fb" hidden><span class="verdict"></span>指向室女座 45 天，指向天蠍座只有 7 天。（出處：黃道宮）</p>
+    </div>
+    <div class="q">
+      <p class="qt">6. 依回歸黃道，3 月 25 日出生是白羊宮。那天太陽實際在哪個天文星座？</p>
+      <div class="opts"><button type="button" data-ok="0">白羊座</button><button type="button" data-ok="1">雙魚座</button></div>
+      <p class="fb" hidden><span class="verdict"></span>依 IAU 邊界，太陽 3 月 11 日到 4 月 18 日在雙魚座（英文維基日期表，準確到 2011 年）。（出處：日期對照表）</p>
+    </div>
+  </div>
+</div>
+<footer class="src"><b>出處（wiki）</b>：IAU、常見誤解、黃道宮、日期對照表</footer>
+</section>
+
+<!-- 23 -->
+<section class="slide" data-source="index" aria-label="第 23 張：資料來源">
+<div class="inner">
+  <p class="kicker">資料來源</p>
+  <h2>資料來源</h2>
+  <p class="note" style="margin-bottom:.6em">每張投影片的內容都來自本專案的 wiki，頁尾列出用到的 wiki 頁面。來源說法不一致的地方，記在 wiki 的 contradictions 頁。等級：① 官方機構原文 ② 教育機構 ③ 新聞 ④ 其他。</p>
+  <table class="srcs">
+    <thead><tr><th>等級</th><th>原始資料</th></tr></thead>
+    <tbody>
+      <tr><td>①</td><td>IAU〈The Constellations〉；NASA〈Constellations and the Calendar〉（2016）；IAU 天文教育辦公室 astro4edu 詞彙「Constellation」、〈Ophiuchus Constellation Map〉（英文版）</td></tr>
+      <tr><td>②</td><td>astro4edu 上述兩頁的中文翻譯版；臺北市教育局資源〈黃道12星座為什麼變成13星座？〉</td></tr>
+      <tr><td>③</td><td>Smithsonian Magazine（2016）；Phil Plait〈<span lang="en">No, NASA Didn’t Change Your Astrological Sign</span>〉（Slate，2016）</td></tr>
+      <tr><td>④</td><td>英文維基〈Sidereal and tropical astrology〉＋中文維基〈歲差〉；Kerykeion〈Tropical vs. Sidereal Astrology Explained〉</td></tr>
+    </tbody>
+  </table>
+</div>
+<footer class="src"><b>出處（wiki）</b>：index</footer>
+</section>
+
+</main>
+<nav class="ctrl" aria-label="換頁">
+  <button type="button" id="prev" aria-label="上一張">←</button>
+  <span id="counter" aria-live="polite">1 / 23</span>
+  <button type="button" id="next" aria-label="下一張">→</button>
+</nav>
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('section.slide'));
+  var prog = document.querySelector('.progress');
+  var counter = document.getElementById('counter');
+  var cur = 0;
+  slides.forEach(function(s){ s.setAttribute('aria-hidden','true'); });
+  function go(i, updateHash){
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    slides[cur].classList.remove('active');
+    slides[cur].setAttribute('aria-hidden','true');
+    cur = i;
+    var s = slides[cur];
+    s.classList.add('active');
+    s.removeAttribute('aria-hidden');
+    s.scrollTop = 0;
+    counter.textContent = (cur + 1) + ' / ' + slides.length;
+    prog.style.width = ((cur + 1) / slides.length * 100) + '%';
+    if (updateHash !== false) { try { history.replaceState(null, '', '#' + (cur + 1)); } catch(e) {} }
+  }
+  function fromHash(){ var n = parseInt((location.hash || '').slice(1), 10); return isNaN(n) ? 0 : n - 1; }
+  document.getElementById('prev').addEventListener('click', function(){ go(cur - 1); });
+  document.getElementById('next').addEventListener('click', function(){ go(cur + 1); });
+  document.addEventListener('keydown', function(e){
+    var tag = e.target && e.target.tagName;
+    if (tag === 'SELECT' || tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    var k = e.key;
+    if (k === 'ArrowRight' || k === 'PageDown' || (k === ' ' && tag !== 'BUTTON')) { e.preventDefault(); go(cur + 1); }
+    else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); go(cur - 1); }
+    else if (k === 'Home') { e.preventDefault(); go(0); }
+    else if (k === 'End') { e.preventDefault(); go(slides.length - 1); }
+  });
+  var sx = null, sy = null, skip = false;
+  document.addEventListener('touchstart', function(e){
+    var t = e.touches[0]; sx = t.clientX; sy = t.clientY;
+    skip = !!(e.target.closest && e.target.closest('.hscroll, select, button, .lookup .pick'));
+  }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if (sx === null || skip) { sx = null; return; }
+    var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(cur + (dx < 0 ? 1 : -1));
+    sx = null;
+  }, {passive:true});
+  window.addEventListener('hashchange', function(){ var i = fromHash(); if (i !== cur) go(i, false); });
+  go(fromHash(), false);
+
+  /* quiz */
+  Array.prototype.forEach.call(document.querySelectorAll('.q'), function(q){
+    var fb = q.querySelector('.fb'), btns = q.querySelectorAll('.opts button');
+    Array.prototype.forEach.call(btns, function(b){
+      b.setAttribute('aria-pressed','false');
+      b.addEventListener('click', function(){
+        Array.prototype.forEach.call(btns, function(x){ x.classList.remove('right','wrong'); x.setAttribute('aria-pressed','false'); });
+        var ok = b.getAttribute('data-ok') === '1';
+        b.setAttribute('aria-pressed','true');
+        b.classList.add(ok ? 'right' : 'wrong');
+        if (!ok) q.querySelector('.opts button[data-ok="1"]').classList.add('right');
+        fb.hidden = false;
+        fb.classList.toggle('isbad', !ok);
+        fb.querySelector('.verdict').textContent = ok ? '答對了！' : '再想想：正確答案已用綠框標出。';
+      });
+    });
+  });
+
+  /* birthday lookup: data generated from wiki/synthesis/日期對照表.md and 名稱對照表.md */
+  var DATA = {"trop": [{"name": "白羊宮", "eng": "Aries", "sm": 3, "sd": 21, "em": 4, "ed": 19}, {"name": "金牛宮", "eng": "Taurus", "sm": 4, "sd": 20, "em": 5, "ed": 20}, {"name": "雙子宮", "eng": "Gemini", "sm": 5, "sd": 21, "em": 6, "ed": 21}, {"name": "巨蟹宮", "eng": "Cancer", "sm": 6, "sd": 22, "em": 7, "ed": 22}, {"name": "獅子宮", "eng": "Leo", "sm": 7, "sd": 23, "em": 8, "ed": 22}, {"name": "處女宮", "eng": "Virgo", "sm": 8, "sd": 23, "em": 9, "ed": 22}, {"name": "天秤宮", "eng": "Libra", "sm": 9, "sd": 23, "em": 10, "ed": 23}, {"name": "天蠍宮", "eng": "Scorpio", "sm": 10, "sd": 24, "em": 11, "ed": 22}, {"name": "射手宮", "eng": "Sagittarius", "sm": 11, "sd": 23, "em": 12, "ed": 21}, {"name": "摩羯宮", "eng": "Capricorn", "sm": 12, "sd": 22, "em": 1, "ed": 19}, {"name": "水瓶宮", "eng": "Aquarius", "sm": 1, "sd": 20, "em": 2, "ed": 18}, {"name": "雙魚宮", "eng": "Pisces", "sm": 2, "sd": 19, "em": 3, "ed": 20}], "sid": [{"name": "白羊宮", "eng": "Aries", "sm": 4, "sd": 14, "em": 5, "ed": 14}, {"name": "金牛宮", "eng": "Taurus", "sm": 5, "sd": 15, "em": 6, "ed": 14}, {"name": "雙子宮", "eng": "Gemini", "sm": 6, "sd": 15, "em": 7, "ed": 16}, {"name": "巨蟹宮", "eng": "Cancer", "sm": 7, "sd": 17, "em": 8, "ed": 16}, {"name": "獅子宮", "eng": "Leo", "sm": 8, "sd": 17, "em": 9, "ed": 16}, {"name": "處女宮", "eng": "Virgo", "sm": 9, "sd": 17, "em": 10, "ed": 17}, {"name": "天秤宮", "eng": "Libra", "sm": 10, "sd": 18, "em": 11, "ed": 16}, {"name": "天蠍宮", "eng": "Scorpio", "sm": 11, "sd": 17, "em": 12, "ed": 15}, {"name": "射手宮", "eng": "Sagittarius", "sm": 12, "sd": 16, "em": 1, "ed": 14}, {"name": "摩羯宮", "eng": "Capricorn", "sm": 1, "sd": 15, "em": 2, "ed": 12}, {"name": "水瓶宮", "eng": "Aquarius", "sm": 2, "sd": 13, "em": 3, "ed": 14}, {"name": "雙魚宮", "eng": "Pisces", "sm": 3, "sd": 15, "em": 4, "ed": 13}], "iau": [{"name": "白羊座", "folk": "", "latin": "Aries", "sm": 4, "sd": 18, "em": 5, "ed": 13}, {"name": "金牛座", "folk": "", "latin": "Taurus", "sm": 5, "sd": 13, "em": 6, "ed": 21}, {"name": "雙子座", "folk": "", "latin": "Gemini", "sm": 6, "sd": 21, "em": 7, "ed": 20}, {"name": "巨蟹座", "folk": "", "latin": "Cancer", "sm": 7, "sd": 20, "em": 8, "ed": 10}, {"name": "獅子座", "folk": "", "latin": "Leo", "sm": 8, "sd": 10, "em": 9, "ed": 16}, {"name": "室女座", "folk": "處女座", "latin": "Virgo", "sm": 9, "sd": 16, "em": 10, "ed": 30}, {"name": "天秤座", "folk": "", "latin": "Libra", "sm": 10, "sd": 30, "em": 11, "ed": 23}, {"name": "天蠍座", "folk": "", "latin": "Scorpius", "sm": 11, "sd": 23, "em": 11, "ed": 29}, {"name": "蛇夫座", "folk": "", "latin": "Ophiuchus", "sm": 11, "sd": 29, "em": 12, "ed": 17}, {"name": "人馬座", "folk": "射手座", "latin": "Sagittarius", "sm": 12, "sd": 17, "em": 1, "ed": 20}, {"name": "摩羯座", "folk": "", "latin": "Capricornus", "sm": 1, "sd": 20, "em": 2, "ed": 16}, {"name": "寶瓶座", "folk": "水瓶座", "latin": "Aquarius", "sm": 2, "sd": 16, "em": 3, "ed": 11}, {"name": "雙魚座", "folk": "", "latin": "Pisces", "sm": 3, "sd": 11, "em": 4, "ed": 18}], "signToConst": {"Aries": {"name": "白羊座", "latin": "Aries"}, "Taurus": {"name": "金牛座", "latin": "Taurus"}, "Gemini": {"name": "雙子座", "latin": "Gemini"}, "Cancer": {"name": "巨蟹座", "latin": "Cancer"}, "Leo": {"name": "獅子座", "latin": "Leo"}, "Virgo": {"name": "室女座", "latin": "Virgo"}, "Libra": {"name": "天秤座", "latin": "Libra"}, "Scorpio": {"name": "天蠍座", "latin": "Scorpius"}, "Sagittarius": {"name": "人馬座", "latin": "Sagittarius"}, "Capricorn": {"name": "摩羯座", "latin": "Capricornus"}, "Aquarius": {"name": "寶瓶座", "latin": "Aquarius"}, "Pisces": {"name": "雙魚座", "latin": "Pisces"}}};
+  var DAYS = [31,29,31,30,31,30,31,31,30,31,30,31];
+  var selM = document.getElementById('lk-m'), selD = document.getElementById('lk-d');
+  for (var m = 1; m <= 12; m++) { var o = document.createElement('option'); o.value = m; o.textContent = m; selM.appendChild(o); }
+  function fillDays(){
+    var keep = parseInt(selD.value, 10) || 1, n = DAYS[selM.value - 1];
+    selD.innerHTML = '';
+    for (var d = 1; d <= n; d++) { var o = document.createElement('option'); o.value = d; o.textContent = d; selD.appendChild(o); }
+    selD.value = Math.min(keep, n);
+  }
+  function k(m, d){ return m * 100 + d; }
+  function inRange(m, d, r){
+    var x = k(m, d), s = k(r.sm, r.sd), e = k(r.em, r.ed);
+    return s <= e ? (x >= s && x <= e) : (x >= s || x <= e);
+  }
+  function constLabel(c){ return c.name + (c.folk ? '（民間通稱' + c.folk + '）' : ''); }
+  function update(){
+    var m = parseInt(selM.value, 10), d = parseInt(selD.value, 10);
+    var trop = DATA.trop.filter(function(r){ return inRange(m, d, r); })[0];
+    var sid = DATA.sid.filter(function(r){ return inRange(m, d, r); })[0];
+    var iau = DATA.iau.filter(function(r){ return inRange(m, d, r); });
+    /* on a shared boundary day, list the constellation that ends that day first */
+    iau.sort(function(a, b){ return (b.em === m && b.ed === d) - (a.em === m && a.ed === d); });
+    document.getElementById('lk-trop').textContent = trop ? trop.name : '—';
+    document.getElementById('lk-sid').textContent = sid ? sid.name : '—';
+    var iauEl = document.getElementById('lk-iau');
+    iauEl.textContent = iau.map(function(c){ return c.name; }).join('／') || '—';
+    var cmp = document.getElementById('lk-cmp');
+    if (!trop || !iau.length) { cmp.textContent = ''; return; }
+    var match = DATA.signToConst[trop.eng];
+    var txt = '回歸黃道的「' + trop.name + '」對應的是「' + match.name + '」；這天太陽實際在「' + iau.map(constLabel).join('」和「') + '」。';
+    if (iau.length > 1) {
+      txt += '日期表上，這天同時是「' + iau[0].name + '」的最後一天和「' + iau[1].name + '」的第一天，所以兩個都列出來。';
+    } else {
+      txt += (iau[0].latin === match.latin) ? '這天兩者一致。' : '這天兩者不一樣。';
+    }
+    cmp.textContent = txt;
+  }
+  selM.addEventListener('change', function(){ fillDays(); update(); });
+  selD.addEventListener('change', update);
+  selM.value = 3; fillDays(); selD.value = 25; update();
+})();
+</script>
+</body>
+</html>
